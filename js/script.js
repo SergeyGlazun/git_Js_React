@@ -35,8 +35,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    
-      const deadline = '2022-05-11';
+
+    const deadline = '2022-05-11';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -62,8 +62,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-     function setClock(selector, endtime) {
-        
+    function setClock(selector, endtime) {
+
         const timer = document.querySelector(selector),
             days = timer.querySelector('#days'),
             hours = timer.querySelector('#hours'),
@@ -90,21 +90,45 @@ window.addEventListener('DOMContentLoaded', () => {
     setClock('.timer', deadline);
 
     const modalTrigger = document.querySelectorAll('.btn_connection'),
-    modal = document.querySelector('.modal'),
-    modalCloseBtn = document.querySelector('.modal__close');
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('.modal__close');
 
+    function OpenModal() {
+        modal.style.display = "block";
+        document.body.style.overflow = 'hidden';
+        clearInterval(modalTimerId);
+    }
 
-    modalTrigger.forEach((item,i) =>{
-        item.addEventListener('click', () => {         
-            modal.style.display = "block";     
-            document.body.style.overflow = 'hidden';         
+    function closeModal() {
+        modal.style.display = "none";
+        document.body.style.overflow = '';
+    }
+
+    function showModalByScroll(){
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            OpenModal();
+            window.removeEventListener('scroll', showModalByScroll)
+        }
+    }
+
+    modalTrigger.forEach((item, i) => {
+        item.addEventListener('click', () => {
+            OpenModal();
         });
-      
+
     })
 
-    modalCloseBtn.addEventListener('click', ()=>{
-        modal.style.display = "none";   
-        document.body.style.overflow = '';     
-});
+    modalCloseBtn.addEventListener('click', () => {
+        closeModal();
+    });
 
+    document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape") {
+            closeModal();
+        }
+    });
+
+    const modalTimerId = setTimeout(OpenModal, 5000);
+
+    window.addEventListener('scroll',showModalByScroll);
 });
